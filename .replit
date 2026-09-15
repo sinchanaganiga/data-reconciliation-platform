@@ -38,13 +38,13 @@ outputType = "webview"
 name = "Backend"
 author = "agent"
 
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "cd backend && mvn spring-boot:run"
-waitForPort = 8080
-
 [workflows.workflow.metadata]
 outputType = "console"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend && CORS_ALLOWED_ORIGINS=https://$REPLIT_DEV_DOMAIN:5000 mvn spring-boot:run"
+waitForPort = 8080
 
 [[ports]]
 localPort = 5000
