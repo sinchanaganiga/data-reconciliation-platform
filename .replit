@@ -55,7 +55,6 @@ localPort = 8080
 externalPort = 80
 
 [deployment]
-deploymentTarget = "cloudrun"
-
-[deployment.run]
-args = ["sh", "-c", "/nix/store/c8hr2f0b0dm685yx1dkp6bw24bpx495n-graalvm19-ce-22.3.1/bin/java -classpath .:target/dependency/* Main"]
+deploymentTarget = "autoscale"
+run = ["java", "-jar", "backend/target/data-reconciliation-platform-0.0.1-SNAPSHOT.jar", "--server.address=0.0.0.0", "--server.port=5000"]
+build = ["sh", "-c", "npm ci --prefix frontend && VITE_API_URL= npm run build --prefix frontend && rm -rf backend/src/main/resources/static && mkdir -p backend/src/main/resources/static && cp -R frontend/dist/. backend/src/main/resources/static/ && mvn -f backend/pom.xml clean package -DskipTests"]

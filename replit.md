@@ -20,3 +20,26 @@ Useful verification commands:
 cd frontend && npm run build
 cd backend && mvn test
 ```
+
+## Publishing
+
+Publishing builds the React frontend with same-origin API requests, copies the
+generated files into Spring Boot's classpath static directory, and packages the
+backend as an executable JAR:
+
+```bash
+sh -c 'npm ci --prefix frontend &&
+  VITE_API_URL= npm run build --prefix frontend &&
+  rm -rf backend/src/main/resources/static &&
+  mkdir -p backend/src/main/resources/static &&
+  cp -R frontend/dist/. backend/src/main/resources/static/ &&
+  mvn -f backend/pom.xml clean package -DskipTests'
+```
+
+The published process runs:
+
+```bash
+java -jar backend/target/data-reconciliation-platform-0.0.1-SNAPSHOT.jar \
+  --server.address=0.0.0.0 \
+  --server.port=5000
+```
